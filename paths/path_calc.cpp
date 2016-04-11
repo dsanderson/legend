@@ -6,6 +6,7 @@
 #include <nlopt.hpp>
 
 #include "path_io.h"
+#include "path_calc.h"
 
 struct Opt_data {
   Path p1;
@@ -83,7 +84,7 @@ double objective_func(const std::vector<double> &x, std::vector<double> &grad, v
   return score;
 };
 
-void optimize_path(Path p, Path target)
+Transform optimize_path(Path p, Path target)
 {
   std::vector<double> t_form = {0,0,0,1.0};
   nlopt::opt opt(nlopt::LN_SBPLX, 4);
@@ -107,13 +108,20 @@ void optimize_path(Path p, Path target)
   //run optimization
   double minf;
   nlopt::result result = opt.optimize(t_form, minf);
-  std::cout << "value: " << minf << std::endl;
-  std::cout << "Path 1:" << std::endl;
-  print_path(p);
-  std::cout << "Path 2:" << std::endl;
-  print_path(target);
-  std::cout << "Path 1 transformed:" << std::endl;
-  print_path(transform_path(t_form, p));
+  //std::cout << "value: " << minf << std::endl;
+  //std::cout << "Path 1:" << std::endl;
+  //print_path(p);
+  //std::cout << "Path 2:" << std::endl;
+  //print_path(target);
+  //std::cout << "Path 1 transformed:" << std::endl;
+  //print_path(transform_path(t_form, p));
+  Transform t;
+  t.tx = t_form[0];
+  t.ty = t_form[1];
+  t.rotation = t_form[2];
+  t.scale = t_form[3];
+  t.score = minf;
+  return t;
 };
 
 /*int main(int argc, char const *argv[]) {
