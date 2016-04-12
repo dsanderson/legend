@@ -104,6 +104,7 @@ Transform optimize_path(Path p, Path target)
 
   //set optimization end conditions
   opt.set_stopval(1e-4);
+  opt.set_maxtime(1.0);
 
   //run optimization
   double minf;
